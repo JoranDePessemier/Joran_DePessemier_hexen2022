@@ -15,8 +15,6 @@ public class PositionView : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         OnClicked(EventArgs.Empty);
-        transform.position = PositionHelper.WorldPosition(CubePosition);
-        Debug.Log(CubePosition.ToString());
     }
 
     protected virtual void OnClicked(EventArgs eventArgs)

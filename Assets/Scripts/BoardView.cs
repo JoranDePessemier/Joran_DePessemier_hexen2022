@@ -42,17 +42,9 @@ public class BoardView:MonoBehaviour
     [SerializeField]
     private int _size;
 
+    public int Size => _size;
+
     public event EventHandler<PositionEventArgs> PositionClicked;
-
-    private void Start()
-    {
-        PositionView[] positionViews = GetComponentsInChildren<PositionView>();
-
-        foreach(PositionView positionView in positionViews)
-        {
-            positionView.Clicked += OnPositionViewClicked;
-        }
-    }
 
     private void OnPositionViewClicked(object sender, EventArgs e)
     {
@@ -110,6 +102,11 @@ public class BoardView:MonoBehaviour
         }
         #endregion
 
+    }
+
+    internal void ChildClicked(PositionView positionView)
+    {
+        OnPositionClicked(new PositionEventArgs(positionView.CubePosition));
     }
 }
 

@@ -16,9 +16,9 @@ namespace GameSystem.Views
             _parent = GetComponentInParent<BoardView>();
         }
 
-        public void Dragged()
+        public void Dragged(CardView usedCard)
         {
-            _parent.ChildDragged(this);
+            _parent.ChildDragged(this,usedCard);
         }
     }
 

@@ -89,7 +89,7 @@ namespace GameSystem.Views
                 {
                     Destroy(this.gameObject);
 
-                    rayObject.GetComponentInParent<PositionView>().Dragged();
+                    rayObject.GetComponentInParent<PositionView>().Dragged(this);
                 }
             }
         }

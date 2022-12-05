@@ -15,29 +15,29 @@ namespace CardSystem
         private Board _board;
         private List<Position> _positions = new List<Position>();
 
-        public MoveSetHelper(Position playerPosition, Board board)
+        public MoveSetHelper(Board board,Position playerPosition)
         {
             _currentPlayerPosition = playerPosition;
             _board = board;
         }
 
-        public MoveSetHelper Right(int maxSteps)
+        public MoveSetHelper Right(int maxSteps = int.MaxValue)
             => Collect(new Vector2Int(1,0), maxSteps);
 
-        public MoveSetHelper Left(int maxSteps)
+        public MoveSetHelper Left(int maxSteps = int.MaxValue)
             => Collect(new Vector2Int(-1,0), maxSteps);
 
-        public MoveSetHelper UpRight(int maxSteps)
-            => Collect(new Vector2Int(1, 1), maxSteps);
+        public MoveSetHelper UpRight(int maxSteps = int.MaxValue)
+            => Collect(new Vector2Int(0, 1), maxSteps);
 
-        public MoveSetHelper UpLeft(int maxSteps)
+        public MoveSetHelper UpLeft(int maxSteps = int.MaxValue)
             => Collect(new Vector2Int(-1, 1), maxSteps);
 
-        public MoveSetHelper DownRight(int maxSteps)
+        public MoveSetHelper DownRight(int maxSteps = int.MaxValue)
             => Collect(new Vector2Int(1, -1), maxSteps);
 
-        public MoveSetHelper DownLeft(int maxSteps)
-            => Collect(new Vector2Int(-1, -1), maxSteps);
+        public MoveSetHelper DownLeft(int maxSteps = int.MaxValue)
+            => Collect(new Vector2Int(0, -1), maxSteps);
 
         public MoveSetHelper Collect(Vector2Int direction, int maxSteps = int.MaxValue)
         {

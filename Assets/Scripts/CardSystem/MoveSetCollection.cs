@@ -10,7 +10,15 @@ namespace CardSystem
 
         public MoveSetCollection(Board board)
         {
-
+            _moveSets.Add(CardType.LineAttack, new ConfigurableMoveSet(board,(b, p ) => new MoveSetHelper(b,p)
+            .DownLeft()
+            .DownRight()
+            .Right()
+            .Left()
+            .UpRight()
+            .UpLeft()
+            .ValidPositions()
+            ));
         }
 
         public MoveSet For(CardType type)

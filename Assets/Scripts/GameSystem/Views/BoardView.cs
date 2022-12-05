@@ -31,9 +31,12 @@ namespace GameSystem.Views
     {
         public Position Position { get; }
 
-        public PositionEventArgs(Position position)
+        public CardView CardView { get; }
+
+        public PositionEventArgs(Position position, CardView cardView)
         {
             Position = position;
+            CardView = cardView;
         }
 
     }
@@ -50,13 +53,6 @@ namespace GameSystem.Views
 
         public event EventHandler<PositionEventArgs> PositionClicked;
 
-        private void OnPositionViewClicked(object sender, EventArgs e)
-        {
-            if (sender is PositionView positionView)
-            {
-                OnPositionClicked(new PositionEventArgs(positionView.CubePosition));
-            }
-        }
 
         private void OnPositionClicked(PositionEventArgs positionEventArgs)
         {
@@ -108,9 +104,9 @@ namespace GameSystem.Views
 
         }
 
-        internal void ChildDragged(PositionView positionView)
+        internal void ChildDragged(PositionView positionView, CardView cardView)
         {
-            OnPositionClicked(new PositionEventArgs(positionView.CubePosition));
+            OnPositionClicked(new PositionEventArgs(positionView.CubePosition,cardView));
         }
     }
 

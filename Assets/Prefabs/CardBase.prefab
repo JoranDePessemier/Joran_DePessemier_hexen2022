@@ -130,3 +130,4 @@ MonoBehaviour:
   _dropMask:
     serializedVersion: 2
     m_Bits: 8
+  _type: 1

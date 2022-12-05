@@ -1,15 +1,13 @@
 ﻿using BoardSystem;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CardSystem
 {
     public abstract class MoveSet
     {
         private readonly Board _board;
+
+        protected Board Board => _board;
 
         public MoveSet(Board board)
         {
@@ -20,7 +18,7 @@ namespace CardSystem
 
         public virtual bool Execute(Position fromPosition, Position toPosition)
         {
-            _board.Take(fromPosition);
+            _board.Take(toPosition);
 
             return _board.Move(fromPosition, toPosition);
         }

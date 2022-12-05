@@ -1,4 +1,5 @@
 using BoardSystem;
+using CardSystem;
 using GameSystem.Helpers;
 using GameSystem.Views;
 using System;
@@ -11,12 +12,19 @@ namespace GameSystem
     public class GameLoop : MonoBehaviour
     {
         private Board _board;
+        private Engine _engine;
+        private BoardView _boardView;
+
+
         private void Start()
         {
             BoardView boardView = FindObjectOfType<BoardView>();
+            _board = new Board(boardView.Size);
+            _engine = new Engine(_board);
+
             boardView.PositionClicked += OnPositionDropped;
 
-            _board = new Board(boardView.Size);
+            
 
             _board.PiecePlaced += (s, e) =>
             {
@@ -39,12 +47,22 @@ namespace GameSystem
                 _board.Place(PositionHelper.CubePosition(pieceView.WorldPosition), pieceView);
             }
 
-
+            _boardView = FindObjectOfType<BoardView>();
+            _boardView.PositionClicked += OnPositionDropped;
         }
 
         private void OnPositionDropped(object sender, PositionEventArgs e)
         {
-            Debug.Log(e.Position);
+            Position dropPosition = e.Position;
+            CardView dropCard = e.CardView;
+            Position fromPosition = PositionHelper.CubePosition(FindObjectOfType<PieceView>().WorldPosition);
+
+            MoveSet moveSet = _engine.MoveSets.For(dropCard.Type);
+            //List<Position> validPositions = moveSet.Positions(fromPosition);
+            
+
+            _engine.Move(fromPosition,dropPosition,e.CardView);
+
         }
     }
 

@@ -73,6 +73,13 @@ namespace GameSystem.Views
             if (_draggingIcon!=null)
             {
                 SetDraggedPosition(eventData);
+
+                GameObject rayObject = eventData.pointerCurrentRaycast.gameObject;
+
+                if (rayObject && (_dropMask & (1 << rayObject.layer)) != 0)
+                {
+                    rayObject.GetComponentInParent<PositionView>().Dragged(this);
+                }
             }
         }
 
@@ -89,7 +96,7 @@ namespace GameSystem.Views
                 {
                     Destroy(this.gameObject);
 
-                    rayObject.GetComponentInParent<PositionView>().Dragged(this);
+                    rayObject.GetComponentInParent<PositionView>().Dropped(this);
                 }
             }
         }

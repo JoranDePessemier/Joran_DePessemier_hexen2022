@@ -20,7 +20,7 @@ namespace CardSystem
         {
             _board.Take(toPosition);
 
-            return _board.Move(fromPosition, toPosition);
+            return _board.Move(fromPosition, toPosition); //TODO: Change this to what each card needs to do
         }
     }
 }

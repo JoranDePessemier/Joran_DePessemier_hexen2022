@@ -22,7 +22,8 @@ namespace GameSystem
             _board = new Board(boardView.Size);
             _engine = new Engine(_board);
 
-            boardView.PositionClicked += OnPositionDropped;
+            boardView.PositionDropped += OnPositionDropped;
+            boardView.PositionDragged += OnPositionDragged;
 
             
 
@@ -48,21 +49,30 @@ namespace GameSystem
             }
 
             _boardView = FindObjectOfType<BoardView>();
-            _boardView.PositionClicked += OnPositionDropped;
+            _boardView.PositionDropped += OnPositionDropped;
         }
 
         private void OnPositionDropped(object sender, PositionEventArgs e)
         {
             Position dropPosition = e.Position;
             CardView dropCard = e.CardView;
-            Position fromPosition = PositionHelper.CubePosition(FindObjectOfType<PieceView>().WorldPosition);
+            Position fromPosition = PositionHelper.CubePosition(FindObjectOfType<PieceView>().WorldPosition); //TODO: Change this to find the player
 
             MoveSet moveSet = _engine.MoveSets.For(dropCard.Type);
-            //List<Position> validPositions = moveSet.Positions(fromPosition);
             
 
-            _engine.Move(fromPosition,dropPosition,e.CardView);
+            _engine.Move(fromPosition,dropPosition,e.CardView); 
+            _boardView.ActivePositions = new List<Position>();
+        }
 
+        private void OnPositionDragged(object sender, PositionEventArgs e)
+        {
+            CardView dropCard = e.CardView;
+            Position fromPosition = PositionHelper.CubePosition(FindObjectOfType<PieceView>().WorldPosition); //TODO: Change this to find the player
+
+            MoveSet moveSet = _engine.MoveSets.For(dropCard.Type);
+            List<Position> validPositions = moveSet.Positions(fromPosition);
+            _boardView.ActivePositions = validPositions;
         }
     }
 

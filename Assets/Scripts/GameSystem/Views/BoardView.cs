@@ -49,14 +49,60 @@ namespace GameSystem.Views
         [SerializeField]
         private int _size;
 
+        private List<Position> _activePositions = new List<Position>();
+        
+        private Dictionary<Position, PositionView> _positionViews = new Dictionary<Position, PositionView>();
+
         public int Size => _size;
 
-        public event EventHandler<PositionEventArgs> PositionClicked;
+        public event EventHandler<PositionEventArgs> PositionDropped;
 
+        public event EventHandler<PositionEventArgs> PositionDragged;
 
-        private void OnPositionClicked(PositionEventArgs positionEventArgs)
+        private void OnEnable()
         {
-            EventHandler<PositionEventArgs> handler = PositionClicked;
+            PositionView[] positionViews = GetComponentsInChildren<PositionView>();
+            foreach (PositionView positionView in positionViews)
+            {
+                _positionViews.Add(positionView.CubePosition, positionView);
+            }
+        }
+
+        public List<Position> ActivePositions
+        {
+            set
+            {
+                foreach (Position position in _activePositions)
+                {
+                    _positionViews[position].DeActivate();
+                }
+
+                if (value == null)
+                {
+                    _activePositions.Clear();
+                }
+                else
+                {
+                    _activePositions = value;
+                }
+
+                foreach (Position position in value)
+                {
+                    _positionViews[position].Activate();
+                }
+            }
+        }
+
+
+        private void OnPositionDropped(PositionEventArgs positionEventArgs)
+        {
+            EventHandler<PositionEventArgs> handler = PositionDropped;
+            handler?.Invoke(this, positionEventArgs);
+        }
+
+        private void OnPositionDragged(PositionEventArgs positionEventArgs)
+        {
+            EventHandler<PositionEventArgs> handler = PositionDragged;
             handler?.Invoke(this, positionEventArgs);
         }
 
@@ -104,10 +150,17 @@ namespace GameSystem.Views
 
         }
 
+        internal void ChildDropped(PositionView positionView, CardView cardView)
+        {
+            OnPositionDropped(new PositionEventArgs(positionView.CubePosition,cardView));
+        }
+
         internal void ChildDragged(PositionView positionView, CardView cardView)
         {
-            OnPositionClicked(new PositionEventArgs(positionView.CubePosition,cardView));
+            OnPositionDragged(new PositionEventArgs(positionView.CubePosition, cardView));
         }
+
+
     }
 
 

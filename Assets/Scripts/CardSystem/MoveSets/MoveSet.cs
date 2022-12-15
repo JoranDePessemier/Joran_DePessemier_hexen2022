@@ -16,9 +16,6 @@ namespace CardSystem.MoveSets
 
         public abstract List<Position> Positions(Position fromPosition, Position hoverPosition);
 
-        public virtual bool Execute(Position fromPosition, Position toPosition)
-        {
-            return true;
-        }
+        public abstract bool Execute(Position fromPosition, Position toPosition);
     }
 }

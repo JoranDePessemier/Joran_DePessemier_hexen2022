@@ -71,7 +71,7 @@ namespace GameSystem
             Position fromPosition = PositionHelper.CubePosition(FindObjectOfType<PieceView>().WorldPosition); //TODO: Change this to find the player
 
             MoveSet moveSet = _engine.MoveSets.For(dropCard.Type);
-            List<Position> validPositions = moveSet.Positions(fromPosition);
+            List<Position> validPositions = moveSet.Positions(fromPosition,e.Position);
             _boardView.ActivePositions = validPositions;
         }
     }

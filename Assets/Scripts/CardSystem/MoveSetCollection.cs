@@ -1,4 +1,5 @@
 ﻿using BoardSystem;
+using CardSystem.MoveSets;
 using GameSystem.Views;
 using System.Collections.Generic;
 
@@ -10,15 +11,7 @@ namespace CardSystem
 
         public MoveSetCollection(Board board)
         {
-            _moveSets.Add(CardType.LineAttack, new ConfigurableMoveSet(board,(b, p ) => new MoveSetHelper(b,p)
-            .DownLeft()
-            .DownRight()
-            .Right()
-            .Left()
-            .UpRight()
-            .UpLeft()
-            .ValidPositions()
-            ));
+            _moveSets.Add(CardType.LineAttack, new LineAttackMoveSet(board));
         }
 
         public MoveSet For(CardType type)

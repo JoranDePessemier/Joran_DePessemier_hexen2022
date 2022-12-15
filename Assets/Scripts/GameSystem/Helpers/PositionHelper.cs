@@ -12,7 +12,7 @@ namespace GameSystem.Helpers
     {
         private static readonly Vector2 _tileRadius = new Vector2(1, 1);
 
-        private static Position CubeSubtract(Position tile1, Position tile2)
+        public static Position CubeSubtract(Position tile1, Position tile2)
         {
             return new Position(tile1.Q - tile2.Q, tile1.R - tile2.R, tile1.S - tile2.S);
         }
@@ -72,6 +72,34 @@ namespace GameSystem.Helpers
 
         private static Position CubeRound(float fractionalQ, float fractionalR) 
             => CubeRound(fractionalQ, fractionalR, -fractionalQ - fractionalR);
+
+        private static Position CubeRound(Position position)
+            => CubeRound(position.Q, position.S);
+
+        private static int Lerp(float a, float b, float t)
+        {
+            return (int)(a + (b - a) * t);
+        }
+
+
+        private static Position CubeLerp(Position a, Position b, float t)
+        {
+            return new Position(Lerp(a.Q, b.Q, t),
+                Lerp(a.R, b.R, t),
+                Lerp(a.R, b.R, t));
+        }
+
+        public static List<Position> CubeLineDraw(Position a, Position b)
+        {
+            var N = CubeDistance(a, b);
+            var results = new List<Position>();
+            for (int i = 0; i <= N; i++)
+            {
+                results.Add(CubeRound(CubeLerp(a, b, 1.0f / N * i)));
+            }
+
+            return results;
+        }
 
 
     }

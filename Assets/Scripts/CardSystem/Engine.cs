@@ -47,7 +47,7 @@ namespace CardSystem
                 return false;
             }
 
-            if (!moveSet.Positions(fromPosition).Contains(toPosition))
+            if (!moveSet.Positions(fromPosition,toPosition).Contains(toPosition))
             {
                 return false;
             }

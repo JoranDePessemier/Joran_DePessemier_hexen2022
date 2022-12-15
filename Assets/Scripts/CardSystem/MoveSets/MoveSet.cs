@@ -1,7 +1,7 @@
 ﻿using BoardSystem;
 using System.Collections.Generic;
 
-namespace CardSystem
+namespace CardSystem.MoveSets
 {
     public abstract class MoveSet
     {
@@ -14,13 +14,11 @@ namespace CardSystem
             _board = board;
         }
 
-        public abstract List<Position> Positions(Position fromPosition);
+        public abstract List<Position> Positions(Position fromPosition, Position hoverPosition);
 
         public virtual bool Execute(Position fromPosition, Position toPosition)
         {
-            _board.Take(toPosition);
-
-            return _board.Move(fromPosition, toPosition); //TODO: Change this to what each card needs to do
+            return true;
         }
     }
 }

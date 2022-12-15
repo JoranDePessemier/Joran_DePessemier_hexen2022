@@ -1,9 +1,9 @@
 ﻿using BoardSystem;
 using System.Collections.Generic;
 
-namespace CardSystem
+namespace CardSystem.MoveSets
 {
-    internal delegate List<Position> Collector(Board board, Position position);
+    internal delegate List<Position> Collector(Board board, Position playerPosition,Position hoverPosition);
 
     internal class ConfigurableMoveSet : MoveSet
     {
@@ -14,9 +14,9 @@ namespace CardSystem
             _collector = collector;
         }
 
-        public override List<Position> Positions(Position fromPosition)
+        public override List<Position> Positions(Position playerPosition, Position hoverPosition)
         {
-            return _collector(Board, fromPosition);
+            return _collector(Board, playerPosition,hoverPosition);
         }
     }
 }

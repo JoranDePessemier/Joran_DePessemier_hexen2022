@@ -12,18 +12,14 @@ namespace GameSystem.Helpers
     {
         private static readonly Vector2 _tileRadius = new Vector2(1, 1);
 
-        public static Position CubeSubtract(Position tile1, Position tile2)
-        {
-            return new Position(tile1.Q - tile2.Q, tile1.R - tile2.R, tile1.S - tile2.S);
-        }
+        private static readonly Vector2Int _left = new Vector2Int(-1,0);
+        private static readonly Vector2Int _right = new Vector2Int(1, 0);
+        private static readonly Vector2Int _upLeft = new Vector2Int(-1, 1);
+        private static readonly Vector2Int _upRight = new Vector2Int(0, 1);
+        private static readonly Vector2Int _downLeft = new Vector2Int(0, -1);
+        private static readonly Vector2Int _downRight = new Vector2Int(1, -1);
 
-        public static int CubeDistance(Position tile1, Position tile2)
-        {
-            Position vector = CubeSubtract(tile1, tile2);
-
-            return (Mathf.Abs(vector.Q) + Mathf.Abs(vector.R) + Mathf.Abs(vector.S)) / 2;
-        }
-
+        #region Transforming between cube and worldpositions
         public static Position CubePosition(Vector3 worldPosition)
         {
             float Q = (Mathf.Sqrt(3) / 3 * worldPosition.x + -1f / 3f * worldPosition.z) / _tileRadius.x;
@@ -39,6 +35,25 @@ namespace GameSystem.Helpers
 
             return new Vector3(x, 0, z);
 
+        }
+
+        #endregion
+
+        #region Basic operations
+
+        public static Position CubeSubtract(Position position1, Position position2)
+        {
+            return new Position(position1.Q - position2.Q, position1.R - position2.R, position1.S - position2.S);
+        }
+
+        public static Position CubeAdd(Position position1, Position position2)
+        {
+            return new Position(position1.Q + position2.Q, position1.R + position2.R, position1.S + position2.S);
+        }
+
+        public static Position CubeScale(Position position, int factor)
+        {
+            return new Position(position.Q * factor, position.R * factor);
         }
 
         private static Position CubeRound(float fractionalQ, float fractionalR, float fractionalS)
@@ -70,36 +85,71 @@ namespace GameSystem.Helpers
 
         }
 
-        private static Position CubeRound(float fractionalQ, float fractionalR) 
+        private static Position CubeRound(float fractionalQ, float fractionalR)
             => CubeRound(fractionalQ, fractionalR, -fractionalQ - fractionalR);
 
         private static Position CubeRound(Position position)
             => CubeRound(position.Q, position.S);
 
-        private static int Lerp(float a, float b, float t)
+        #endregion
+
+        #region Distance between positions
+        public static int CubeDistance(Position tile1, Position tile2)
         {
-            return (int)(a + (b - a) * t);
+            Position vector = CubeSubtract(tile1, tile2);
+
+            return (Mathf.Abs(vector.Q) + Mathf.Abs(vector.R) + Mathf.Abs(vector.S)) / 2;
         }
 
+        #endregion
 
-        private static Position CubeLerp(Position a, Position b, float t)
+        #region Line selecting
+        public static List<Position> CubeLine(Board board,Position startingPosition,Vector2Int direction, int maxSteps = int.MaxValue)
         {
-            return new Position(Lerp(a.Q, b.Q, t),
-                Lerp(a.R, b.R, t),
-                Lerp(a.R, b.R, t));
-        }
+            List<Position> results = new List<Position>();
 
-        public static List<Position> CubeLineDraw(Position a, Position b)
-        {
-            var N = CubeDistance(a, b);
-            var results = new List<Position>();
-            for (int i = 0; i <= N; i++)
+            int currentStep = 0;
+
+            Position position = new Position(startingPosition.Q + direction.x, startingPosition.R + direction.y);
+
+            while (board.IsValid(position)
+                && currentStep < maxSteps)
             {
-                results.Add(CubeRound(CubeLerp(a, b, 1.0f / N * i)));
+                results.Add(position);
+                currentStep++;
+
+                position = new Position(position.Q + direction.x, position.R + direction.y);
             }
 
             return results;
         }
+
+        public static List<Position> LeftLine(Board board, Position startingPosition, int maxSteps = int.MaxValue)
+            => CubeLine(board, startingPosition, _left, maxSteps);
+        public static List<Position> RightLine(Board board, Position startingPosition, int maxSteps = int.MaxValue)
+            => CubeLine(board, startingPosition, _right, maxSteps);
+        public static List<Position> UpLeftLine(Board board, Position startingPosition, int maxSteps = int.MaxValue)
+            => CubeLine(board, startingPosition, _upLeft, maxSteps);
+        public static List<Position> UpRightLine(Board board, Position startingPosition, int maxSteps = int.MaxValue)
+            => CubeLine(board, startingPosition, _upRight, maxSteps);
+        public static List<Position> DownLeftLine(Board board, Position startingPosition, int maxSteps = int.MaxValue)
+            => CubeLine(board, startingPosition, _downLeft, maxSteps);
+        public static List<Position> DownRightLine(Board board, Position startingPosition, int maxSteps = int.MaxValue)
+            => CubeLine(board, startingPosition, _downRight, maxSteps);
+        #endregion
+
+        #region Circle selecting
+
+        public static List<Position> cubeRing(Position centerPosition, int radius)
+        {
+            List<Position> results = new List<Position>();
+
+            Position hex = CubeAdd(centerPosition, CubeScale(new Position(_downLeft.x, _downLeft.y), radius));
+
+            return results;
+        }
+
+        #endregion
 
 
     }

@@ -1,9 +1,11 @@
 ﻿using BoardSystem;
+using GameSystem.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace CardSystem.MoveSets
 {
@@ -26,15 +28,29 @@ namespace CardSystem.MoveSets
 
         public override List<Position> Positions(Position fromPosition, Position hoverPosition)
         {
-            return new MoveSetHelper(Board, fromPosition, hoverPosition)
-                .Left()
-                .DownLeft()
-                .UpLeft()
-                .Right()
-                .UpRight()
-                .DownRight()
-                .HpLineCollect()
-                .ValidPositions();
+            List<Position> allPositions = new List<Position>();
+            List<Position> hoverPositions = new List<Position>();
+
+            allPositions.AddRange(PositionHelper.LeftLine(Board,fromPosition));
+            allPositions.AddRange(PositionHelper.RightLine(Board, fromPosition));
+            allPositions.AddRange(PositionHelper.UpLeftLine(Board, fromPosition));
+            allPositions.AddRange(PositionHelper.UpRightLine(Board, fromPosition));
+            allPositions.AddRange(PositionHelper.DownLeftLine(Board, fromPosition));
+            allPositions.AddRange(PositionHelper.DownRightLine(Board, fromPosition));
+
+            Position direction = PositionHelper.CubeSubtract(fromPosition, hoverPosition);
+            Vector2Int vDirection = new Vector2Int(-(int)Math.Sign(direction.Q), -(int)Math.Sign(direction.R));
+
+            hoverPositions.AddRange(PositionHelper.CubeLine(Board, fromPosition, vDirection));
+
+            if (allPositions.Contains(hoverPosition))
+            {
+                return hoverPositions;
+            }
+            else
+            {
+                return allPositions;
+            }
         }
     }
 }

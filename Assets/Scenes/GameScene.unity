@@ -8097,6 +8097,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3946068682864809373, guid: 8f7d066f90005fd45af4fda7df8d3276,
         type: 3}
+      propertyPath: _type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3946068682864809373, guid: 8f7d066f90005fd45af4fda7df8d3276,
+        type: 3}
       propertyPath: _canvas
       value: 
       objectReference: {fileID: 1726465437}

@@ -12,6 +12,7 @@ namespace CardSystem
         public MoveSetCollection(Board board)
         {
             _moveSets.Add(CardType.LineAttack, new LineAttackMoveSet(board));
+            _moveSets.Add(CardType.Teleport, new TeleportMoveSet(board));
         }
 
         public MoveSet For(CardType type)

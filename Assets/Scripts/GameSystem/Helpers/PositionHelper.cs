@@ -12,12 +12,15 @@ namespace GameSystem.Helpers
     {
         private static readonly Vector2 _tileRadius = new Vector2(1,1);
 
-        private static readonly Vector2Int _left = new Vector2Int(-1,0);
-        private static readonly Vector2Int _right = new Vector2Int(1, 0);
-        private static readonly Vector2Int _upLeft = new Vector2Int(-1, 1);
-        private static readonly Vector2Int _upRight = new Vector2Int(0, 1);
-        private static readonly Vector2Int _downLeft = new Vector2Int(0, -1);
-        private static readonly Vector2Int _downRight = new Vector2Int(1, -1);
+        private static readonly Vector2Int[] _directionVectors = 
+        { 
+            new Vector2Int(1,0),
+            new Vector2Int(1,-1),
+            new Vector2Int(0,-1),
+            new Vector2Int(-1,0),
+            new Vector2Int(-1,1),
+            new Vector2Int(0,1)
+        };
 
         #region Transforming between cube and worldpositions
         public static Position CubePosition(Vector3 worldPosition)
@@ -54,6 +57,11 @@ namespace GameSystem.Helpers
         public static Position CubeScale(Position position, int factor)
         {
             return new Position(position.Q * factor, position.R * factor);
+        }
+
+        public static Position CubeNeighbor(Position position, int direction)
+        {
+            return CubeAdd(position,new Position(_directionVectors[direction].x,_directionVectors[direction].y));
         }
 
         private static Position CubeRound(float fractionalQ, float fractionalR, float fractionalS)
@@ -125,17 +133,17 @@ namespace GameSystem.Helpers
         }
 
         public static List<Position> LeftLine(Board board, Position startingPosition, int maxSteps = int.MaxValue)
-            => CubeLine(board, startingPosition, _left, maxSteps);
+            => CubeLine(board, startingPosition, _directionVectors[3], maxSteps);
         public static List<Position> RightLine(Board board, Position startingPosition, int maxSteps = int.MaxValue)
-            => CubeLine(board, startingPosition, _right, maxSteps);
+            => CubeLine(board, startingPosition, _directionVectors[0], maxSteps);
         public static List<Position> UpLeftLine(Board board, Position startingPosition, int maxSteps = int.MaxValue)
-            => CubeLine(board, startingPosition, _upLeft, maxSteps);
+            => CubeLine(board, startingPosition, _directionVectors[5], maxSteps);
         public static List<Position> UpRightLine(Board board, Position startingPosition, int maxSteps = int.MaxValue)
-            => CubeLine(board, startingPosition, _upRight, maxSteps);
+            => CubeLine(board, startingPosition, _directionVectors[4], maxSteps);
         public static List<Position> DownLeftLine(Board board, Position startingPosition, int maxSteps = int.MaxValue)
-            => CubeLine(board, startingPosition, _downLeft, maxSteps);
+            => CubeLine(board, startingPosition, _directionVectors[2], maxSteps);
         public static List<Position> DownRightLine(Board board, Position startingPosition, int maxSteps = int.MaxValue)
-            => CubeLine(board, startingPosition, _downRight, maxSteps);
+            => CubeLine(board, startingPosition, _directionVectors[1], maxSteps);
         #endregion
 
         #region Circle selecting
@@ -144,7 +152,16 @@ namespace GameSystem.Helpers
         {
             List<Position> results = new List<Position>();
 
-            Position hex = CubeAdd(centerPosition, CubeScale(new Position(_downLeft.x, _downLeft.y), radius));
+            Position hex = CubeAdd(centerPosition, CubeScale(new Position(_directionVectors[4].x, _directionVectors[4].y), radius));
+
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < radius; j++)
+                {
+                    results.Add(hex);
+                    hex = CubeNeighbor(hex, i);
+                }
+            }
 
             return results;
         }

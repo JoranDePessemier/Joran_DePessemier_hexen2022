@@ -1,4 +1,5 @@
 ﻿using BoardSystem;
+using GameSystem.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,11 @@ namespace CardSystem.MoveSets
 
         public override List<Position> Positions(Position fromPosition, Position hoverPosition)
         {
-            throw new NotImplementedException();
+            List<Position> allPosition = new List<Position>();
+
+            allPosition.AddRange(PositionHelper.cubeRing(fromPosition, 1));
+
+            return allPosition;
         }
     }
 }

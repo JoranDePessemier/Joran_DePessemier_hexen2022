@@ -10,7 +10,7 @@ namespace GameSystem.Helpers
 {
     public static class PositionHelper
     {
-        private static readonly Vector2 _tileRadius = new Vector2(1, 1);
+        private static readonly Vector2 _tileRadius = new Vector2(1,1);
 
         private static readonly Vector2Int _left = new Vector2Int(-1,0);
         private static readonly Vector2Int _right = new Vector2Int(1, 0);

@@ -41,7 +41,10 @@ namespace CardSystem.MoveSets
             Position direction = PositionHelper.CubeSubtract(fromPosition, hoverPosition);
             Vector2Int vDirection = new Vector2Int(-(int)Math.Sign(direction.Q), -(int)Math.Sign(direction.R));
 
-            hoverPositions.AddRange(PositionHelper.CubeLine(Board, fromPosition, vDirection));
+            if (vDirection != Vector2Int.zero)
+            {
+                hoverPositions.AddRange(PositionHelper.CubeLine(Board, fromPosition, vDirection));
+            }
 
             if (allPositions.Contains(hoverPosition))
             {

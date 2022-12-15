@@ -1,5 +1,6 @@
 using BoardSystem;
 using CardSystem;
+using CardSystem.MoveSets;
 using GameSystem.Helpers;
 using GameSystem.Views;
 using System;
@@ -14,6 +15,7 @@ namespace GameSystem
         private Board _board;
         private Engine _engine;
         private BoardView _boardView;
+        private PieceView _player;
 
 
         private void Start()
@@ -45,6 +47,11 @@ namespace GameSystem
             PieceView[] pieceViews = FindObjectsOfType<PieceView>();
             foreach (PieceView pieceView in pieceViews)
             {
+                if(pieceView.Type == PieceType.Player)
+                {
+                    _player = pieceView;
+                }
+
                 _board.Place(PositionHelper.CubePosition(pieceView.WorldPosition), pieceView);
             }
 
@@ -56,7 +63,7 @@ namespace GameSystem
         {
             Position dropPosition = e.Position;
             CardView dropCard = e.CardView;
-            Position fromPosition = PositionHelper.CubePosition(FindObjectOfType<PieceView>().WorldPosition); //TODO: Change this to find the player
+            Position fromPosition = PositionHelper.CubePosition(_player.WorldPosition); //TODO: Change this to find the player
 
             MoveSet moveSet = _engine.MoveSets.For(dropCard.Type);
             
@@ -68,7 +75,7 @@ namespace GameSystem
         private void OnPositionDragged(object sender, PositionEventArgs e)
         {
             CardView dropCard = e.CardView;
-            Position fromPosition = PositionHelper.CubePosition(FindObjectOfType<PieceView>().WorldPosition); //TODO: Change this to find the player
+            Position fromPosition = PositionHelper.CubePosition(_player.WorldPosition); //TODO: Change this to find the player
 
             MoveSet moveSet = _engine.MoveSets.For(dropCard.Type);
             List<Position> validPositions = moveSet.Positions(fromPosition,e.Position);

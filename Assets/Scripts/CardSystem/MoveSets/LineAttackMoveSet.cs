@@ -16,12 +16,25 @@ namespace CardSystem.MoveSets
 
         public override bool Execute(Position fromPosition, Position toPosition)
         {
-            throw new NotImplementedException();
+            foreach(Position position in Positions(fromPosition, toPosition))
+            {
+                Board.Take(position);
+            }
+
+            return true;
         }
 
         public override List<Position> Positions(Position fromPosition, Position hoverPosition)
         {
-            throw new NotImplementedException();
+            return new MoveSetHelper(Board, fromPosition, hoverPosition)
+                .Left()
+                .DownLeft()
+                .UpLeft()
+                .Right()
+                .UpRight()
+                .DownRight()
+                .HpLineCollect()
+                .ValidPositions();
         }
     }
 }

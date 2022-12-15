@@ -65,7 +65,6 @@ namespace CardSystem
         {
             Position direction = PositionHelper.CubeSubtract(_currentPlayerPosition, _hoverPosition);
             Vector2Int vDirection = new Vector2Int(-(int)Math.Sign(direction.Q), -(int)Math.Sign(direction.R));
-            Debug.Log(vDirection);
 
             int currentStep = 0;
 

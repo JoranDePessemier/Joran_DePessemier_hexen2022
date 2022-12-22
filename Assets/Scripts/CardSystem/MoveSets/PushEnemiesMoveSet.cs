@@ -21,7 +21,11 @@ namespace CardSystem.MoveSets
             {
                 List<Position> line = PositionHelper.CubeLine(Board, fromPosition, PositionHelper.CubeDirection(fromPosition, position), 2);
 
-                if(!Board.TryGetPieceAt(line[1], out PieceView piece))
+                if (line.Count < 2)
+                {
+                    Board.Take(line[0]);
+                }
+                else if(!Board.TryGetPieceAt(line[1], out PieceView piece))
                 {
                     Board.Move(line[0], line[1]);
                 }

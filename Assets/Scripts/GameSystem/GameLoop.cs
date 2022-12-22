@@ -3,6 +3,7 @@ using CardSystem;
 using CardSystem.MoveSets;
 using GameSystem.Helpers;
 using GameSystem.Views;
+using HandFactory;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace GameSystem
         private Engine _engine;
         private BoardView _boardView;
         private PieceView _player;
+        private HandView _handView;
 
 
         private void Start()
@@ -57,8 +59,18 @@ namespace GameSystem
 
             _boardView = FindObjectOfType<BoardView>();
             _boardView.PositionDropped += OnPositionDropped;
+
+            _handView = FindObjectOfType<HandView>();
+            _handView.CardStateSwitched += OnCardStateSwitched;
         }
 
+        //called each time a card is dropped, even in empty space
+        private void OnCardStateSwitched(object sender, CardEventArgs e)
+        {
+            _boardView.ActivePositions = new List<Position>();
+        }
+
+        //called only when the card drops on a tile
         private void OnPositionDropped(object sender, PositionEventArgs e)
         {
             Position dropPosition = e.Position;
@@ -68,8 +80,12 @@ namespace GameSystem
             MoveSet moveSet = _engine.MoveSets.For(dropCard.Type);
             
 
-            _engine.Move(fromPosition,dropPosition,e.CardView); 
-            _boardView.ActivePositions = new List<Position>();
+            _engine.Move(fromPosition,dropPosition,e.CardView);
+
+            if (moveSet.Positions(fromPosition, dropPosition).Contains(dropPosition))
+            {
+                _handView.RemoveCard(e.CardView);
+            }
         }
 
         private void OnPositionDragged(object sender, PositionEventArgs e)

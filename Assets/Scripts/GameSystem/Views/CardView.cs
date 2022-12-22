@@ -21,11 +21,15 @@ namespace GameSystem.Views
 
         private GameObject _draggingIcon;
         private RectTransform _draggingPlane;
-
+        private HandView _hand;
 
         private void Awake()
         {
-
+            _hand = this.GetComponentInParent<HandView>();
+            if(_hand == null)
+            {
+                Debug.LogWarning("The parent object of the cards should have a handview class");
+            }
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -80,6 +84,7 @@ namespace GameSystem.Views
             if (_draggingIcon!=null)
             {
                 SetDraggedPosition(eventData);
+                _hand.ChildStateSwitched(this);
 
                 GameObject rayObject = eventData.pointerCurrentRaycast.gameObject;
 
@@ -95,14 +100,13 @@ namespace GameSystem.Views
             if (_draggingIcon)
             {
                 Destroy(_draggingIcon);
-                
+
+                _hand.ChildStateSwitched(this);
 
                 GameObject rayObject = eventData.pointerCurrentRaycast.gameObject;
 
                 if (rayObject && (_dropMask & (1 << rayObject.layer)) != 0)
                 {
-                    Destroy(this.gameObject);
-
                     rayObject.GetComponentInParent<PositionView>().Dropped(this);
                 }
             }

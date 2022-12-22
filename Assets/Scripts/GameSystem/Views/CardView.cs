@@ -1,4 +1,5 @@
 using CardSystem;
+using HandFactory;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -20,6 +21,12 @@ namespace GameSystem.Views
 
         private GameObject _draggingIcon;
         private RectTransform _draggingPlane;
+
+
+        private void Awake()
+        {
+
+        }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
@@ -88,7 +95,7 @@ namespace GameSystem.Views
             if (_draggingIcon)
             {
                 Destroy(_draggingIcon);
-
+                
 
                 GameObject rayObject = eventData.pointerCurrentRaycast.gameObject;
 

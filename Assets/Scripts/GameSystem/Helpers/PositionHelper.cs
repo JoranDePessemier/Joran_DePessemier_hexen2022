@@ -89,8 +89,13 @@ namespace GameSystem.Helpers
             }
 
             return new Position((int)q, (int)r, (int)s);
+        }
 
-
+        public static Vector2Int CubeDirection(Position startPosition, Position toPosition)
+        {
+            Position direction = PositionHelper.CubeSubtract(startPosition, toPosition);
+            
+            return new Vector2Int(-(int)Math.Sign(direction.Q), -(int)Math.Sign(direction.R));
         }
 
         private static Position CubeRound(float fractionalQ, float fractionalR)
@@ -148,7 +153,7 @@ namespace GameSystem.Helpers
 
         #region Circle selecting
 
-        public static List<Position> cubeRing(Position centerPosition, int radius)
+        public static List<Position> cubeRing(Board board,Position centerPosition, int radius)
         {
             List<Position> results = new List<Position>();
 
@@ -158,7 +163,10 @@ namespace GameSystem.Helpers
             {
                 for (int j = 0; j < radius; j++)
                 {
-                    results.Add(hex);
+                    if (board.IsValid(hex))
+                    {
+                        results.Add(hex);
+                    }
                     hex = CubeNeighbor(hex, i);
                 }
             }
@@ -167,6 +175,7 @@ namespace GameSystem.Helpers
         }
 
         #endregion
+
 
 
     }

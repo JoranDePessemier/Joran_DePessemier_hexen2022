@@ -1,5 +1,6 @@
 ﻿using BoardSystem;
 using GameSystem.Helpers;
+using GameSystem.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace CardSystem.MoveSets
 {
-    class AdjacentAttackMoveSet : MoveSet
+    class PushEnemiesMoveSet : MoveSet
     {
-        public AdjacentAttackMoveSet(Board board) : base(board)
+        public PushEnemiesMoveSet(Board board) : base(board)
         {
         }
 
@@ -18,7 +19,12 @@ namespace CardSystem.MoveSets
         {
             foreach (Position position in Positions(fromPosition, toPosition))
             {
-                Board.Take(position);
+                List<Position> line = PositionHelper.CubeLine(Board, fromPosition, PositionHelper.CubeDirection(fromPosition, position), 2);
+
+                if(!Board.TryGetPieceAt(line[1], out PieceView piece))
+                {
+                    Board.Move(line[0], line[1]);
+                }
             }
 
             return true;
@@ -41,7 +47,7 @@ namespace CardSystem.MoveSets
 
             List<Position> result = new List<Position>();
 
-            foreach(Position position in hoverPositions)
+            foreach (Position position in hoverPositions)
             {
                 if (allPositions.Contains(position))
                 {
@@ -52,7 +58,6 @@ namespace CardSystem.MoveSets
             result.Add(hoverPosition);
 
             return result;
-
         }
     }
 }

@@ -38,8 +38,8 @@ namespace CardSystem.MoveSets
             allPositions.AddRange(PositionHelper.DownLeftLine(Board, fromPosition));
             allPositions.AddRange(PositionHelper.DownRightLine(Board, fromPosition));
 
-            Position direction = PositionHelper.CubeSubtract(fromPosition, hoverPosition);
-            Vector2Int vDirection = new Vector2Int(-(int)Math.Sign(direction.Q), -(int)Math.Sign(direction.R));
+
+            Vector2Int vDirection = PositionHelper.CubeDirection(fromPosition, hoverPosition);
 
             if (vDirection != Vector2Int.zero)
             {

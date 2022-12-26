@@ -11,6 +11,20 @@ namespace GameSystem.Views
         [SerializeField]
         private Canvas _canvas;
 
+
+        public Canvas Canvas
+        {
+            get { return _canvas; }
+            set 
+            { 
+                if(_canvas == null)
+                {
+                    _canvas = value;
+                }
+            }
+        }
+
+
         [SerializeField]
         private LayerMask _dropMask;
 
@@ -23,7 +37,7 @@ namespace GameSystem.Views
         private RectTransform _draggingPlane;
         private HandView _hand;
 
-        private void Awake()
+        private void Start()
         {
             _hand = this.GetComponentInParent<HandView>();
             if(_hand == null)
@@ -34,7 +48,7 @@ namespace GameSystem.Views
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (!_canvas) return;
+            if (!Canvas) return;
 
             CreateIcon();
 
@@ -63,7 +77,7 @@ namespace GameSystem.Views
         {
             _draggingIcon = new GameObject("icon");
 
-            _draggingIcon.transform.SetParent(_canvas.transform, false);
+            _draggingIcon.transform.SetParent(Canvas.transform, false);
             _draggingIcon.transform.SetAsLastSibling();
 
             Image image = _draggingIcon.AddComponent<Image>();

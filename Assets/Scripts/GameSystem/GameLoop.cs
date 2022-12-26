@@ -80,12 +80,12 @@ namespace GameSystem
             MoveSet moveSet = _engine.MoveSets.For(dropCard.Type);
             
 
-            _engine.Move(fromPosition,dropPosition,e.CardView);
-
             if (moveSet.Positions(fromPosition, dropPosition).Contains(dropPosition))
             {
                 _handView.RemoveCard(e.CardView);
             }
+
+            _engine.Move(fromPosition, dropPosition, e.CardView);
         }
 
         private void OnPositionDragged(object sender, PositionEventArgs e)

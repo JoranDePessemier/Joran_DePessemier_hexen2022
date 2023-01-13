@@ -19,6 +19,7 @@ namespace GameSystem.GameStates
         private BoardView _boardView;
         private PieceView _player;
         private HandView _handView;
+        private MenuView _menuView;
 
 
         public override void OnEnter()
@@ -31,6 +32,9 @@ namespace GameSystem.GameStates
 
         private void InitializeScene(AsyncOperation obj)
         {
+            _menuView = GameObject.FindObjectOfType<MenuView>();
+            _menuView.PlayClicked += OnPlayClicked;
+
             //setup the board view, board and card engine
             _boardView = GameObject.FindObjectOfType<BoardView>();
             _board = new Board(_boardView.Size);
@@ -76,7 +80,13 @@ namespace GameSystem.GameStates
             };
         }
 
-            //called only when the card drops on a tile
+        private void OnPlayClicked(object sender, EventArgs e)
+        {
+            StateMachine.MoveTo(States.Menu);
+        }
+
+
+        //called only when the card drops on a tile
         private void OnPositionDropped(object sender, PositionEventArgs e)
         {
             Position dropPosition = e.Position;
@@ -110,6 +120,12 @@ namespace GameSystem.GameStates
             //find the valid positions and set the positions as active in the board, these active positions are removed again when the card is dropped
             List<Position> validPositions = moveSet.Positions(fromPosition, e.Position);
             _boardView.ActivePositions = validPositions;
+        }
+
+        public override void OnExit()
+        {
+            base.OnExit();
+            SceneManager.UnloadSceneAsync("GameScene");
         }
     }
 }

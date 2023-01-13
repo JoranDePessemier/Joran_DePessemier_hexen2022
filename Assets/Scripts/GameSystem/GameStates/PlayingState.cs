@@ -25,7 +25,7 @@ namespace GameSystem.GameStates
         {
             base.OnEnter();
 
-            AsyncOperation op = SceneManager.LoadSceneAsync("Game", LoadSceneMode.Additive);
+            AsyncOperation op = SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
             op.completed += InitializeScene;
         }
 

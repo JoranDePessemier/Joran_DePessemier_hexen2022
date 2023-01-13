@@ -9,6 +9,8 @@ namespace CardSystem
     {
         private Dictionary<CardType, MoveSet> _moveSets = new Dictionary<CardType, MoveSet>();
 
+
+        //add the different card movesets here
         public MoveSetCollection(Board board)
         {
             _moveSets.Add(CardType.LineAttack, new LineAttackMoveSet(board));
@@ -17,6 +19,7 @@ namespace CardSystem
             _moveSets.Add(CardType.PushEnemies, new PushEnemiesMoveSet(board));
         }
 
+        //other classes can ask the moveset for a specific cardttype
         public MoveSet For(CardType type)
         {
             return _moveSets[type];

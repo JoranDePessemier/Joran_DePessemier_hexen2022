@@ -26,6 +26,7 @@ namespace CardSystem
             }
         }
 
+        //exectute the moveset of the card given, test if the move is valid first and return false if it is not
         public bool Move(Position fromPosition, Position toPosition, CardView card)
         {
             if (!_board.IsValid(fromPosition))

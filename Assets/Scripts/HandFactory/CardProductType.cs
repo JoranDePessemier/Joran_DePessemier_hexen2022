@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace HandFactory
 {
+    //class that is only used for the handview class. This is an easy way to spawn multiple of the same card in the hand. This needs to be configured in the engine
+
     [System.Serializable]
     public class CardProductType
     {

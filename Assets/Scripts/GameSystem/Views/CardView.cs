@@ -11,7 +11,6 @@ namespace GameSystem.Views
         [SerializeField]
         private Canvas _canvas;
 
-
         public Canvas Canvas
         {
             get { return _canvas; }
@@ -50,11 +49,14 @@ namespace GameSystem.Views
         {
             if (!Canvas) return;
 
+            //create the drag around card
             CreateIcon();
 
+            //set the position of the drag around card
             SetDraggedPosition(eventData);
         }
 
+        //update the position of the card
         private void SetDraggedPosition(PointerEventData data)
         {
             if (data.pointerEnter != null && data.pointerEnter.transform as RectTransform != null)
@@ -73,6 +75,7 @@ namespace GameSystem.Views
             }
         }
 
+        //create the card that will be dragged around
         private void CreateIcon()
         {
             _draggingIcon = new GameObject("icon");
@@ -97,9 +100,13 @@ namespace GameSystem.Views
         {
             if (_draggingIcon!=null)
             {
+                //set the position of the icon
                 SetDraggedPosition(eventData);
+
+                //state switch every time the card is being dragged
                 _hand.ChildStateSwitched(this);
 
+                //shoot a ray to position views to see where the card is at the moment
                 GameObject rayObject = eventData.pointerCurrentRaycast.gameObject;
 
                 if (rayObject && (_dropMask & (1 << rayObject.layer)) != 0)
@@ -113,10 +120,14 @@ namespace GameSystem.Views
         {
             if (_draggingIcon)
             {
+                //destroy the dragging icon
                 Destroy(_draggingIcon);
 
+                //state switch every time the card is being dropped
                 _hand.ChildStateSwitched(this);
 
+
+                //chech if the card is dropped on a tile and call the dropped function on that tile
                 GameObject rayObject = eventData.pointerCurrentRaycast.gameObject;
 
                 if (rayObject && (_dropMask & (1 << rayObject.layer)) != 0)

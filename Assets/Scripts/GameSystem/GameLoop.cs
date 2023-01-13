@@ -4,8 +4,6 @@ using CardSystem.MoveSets;
 using GameSystem.Helpers;
 using GameSystem.Views;
 using HandFactory;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,15 +20,16 @@ namespace GameSystem
 
         private void Start()
         {
-            BoardView boardView = FindObjectOfType<BoardView>();
-            _board = new Board(boardView.Size);
+            //setup the board view, board and card engine
+            _boardView = FindObjectOfType<BoardView>();
+            _board = new Board(_boardView.Size);
             _engine = new Engine(_board);
 
-            boardView.PositionDropped += OnPositionDropped;
-            boardView.PositionDragged += OnPositionDragged;
+            //setup the events for carddropping and dragging
+            _boardView.PositionDropped += OnPositionDropped;
+            _boardView.PositionDragged += OnPositionDragged;
 
-            
-
+            //makes sure the board class knows about each piece
             _board.PiecePlaced += (s, e) =>
             {
                 e.Piece.Placed(PositionHelper.WorldPosition(e.ToPosition));
@@ -46,6 +45,7 @@ namespace GameSystem
                 e.Piece.Taken();
             };
 
+            //find all pieces and make sure the board class knows about them, also save the player
             PieceView[] pieceViews = FindObjectsOfType<PieceView>();
             foreach (PieceView pieceView in pieceViews)
             {
@@ -57,17 +57,12 @@ namespace GameSystem
                 _board.Place(PositionHelper.CubePosition(pieceView.WorldPosition), pieceView);
             }
 
-            _boardView = FindObjectOfType<BoardView>();
-            _boardView.PositionDropped += OnPositionDropped;
-
+            //setup the hand view and method for when a card is dragged or dropped, even on empty space
             _handView = FindObjectOfType<HandView>();
-            _handView.CardStateSwitched += OnCardStateSwitched;
-        }
-
-        //called each time a card is dropped, even in empty space
-        private void OnCardStateSwitched(object sender, CardEventArgs e)
-        {
-            _boardView.ActivePositions = new List<Position>();
+            _handView.CardStateSwitched += (s, e) =>
+            {
+                _boardView.ActivePositions = new List<Position>();
+            };
         }
 
         //called only when the card drops on a tile
@@ -75,25 +70,33 @@ namespace GameSystem
         {
             Position dropPosition = e.Position;
             CardView dropCard = e.CardView;
-            Position fromPosition = PositionHelper.CubePosition(_player.WorldPosition); //TODO: Change this to find the player
 
+            //from position is the player position
+            Position fromPosition = PositionHelper.CubePosition(_player.WorldPosition);
+
+            //find the card moveset
             MoveSet moveSet = _engine.MoveSets.For(dropCard.Type);
             
-
+            //only remove the card if the dropPosition is actually valid
             if (moveSet.Positions(fromPosition, dropPosition).Contains(dropPosition))
             {
                 _handView.RemoveCard(e.CardView);
             }
 
+            //execute the card move for this card
             _engine.Move(fromPosition, dropPosition, e.CardView);
         }
 
+        //called every time a card is dragged on a tile
         private void OnPositionDragged(object sender, PositionEventArgs e)
         {
             CardView dropCard = e.CardView;
-            Position fromPosition = PositionHelper.CubePosition(_player.WorldPosition); //TODO: Change this to find the player
+            Position fromPosition = PositionHelper.CubePosition(_player.WorldPosition);
 
+            //find the card moveset
             MoveSet moveSet = _engine.MoveSets.For(dropCard.Type);
+
+            //find the valid positions and set the positions as active in the board, these active positions are removed again when the card is dropped
             List<Position> validPositions = moveSet.Positions(fromPosition,e.Position);
             _boardView.ActivePositions = validPositions;
         }

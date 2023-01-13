@@ -57,16 +57,19 @@ namespace BoardSystem
             _size = size;
         }
 
+        //is there a piece on a certain tile
         public bool TryGetPieceAt(Position position, out PieceView piece)
         {
             return _pieces.TryGetValue(position, out piece);
         }
 
+        //is the tile actually on the board
         public bool IsValid(Position position)
         {
             return !(PositionHelper.CubeDistance(new Position(0, 0), position) >= _size);
         }
 
+        //spawn in a piece on a certain position, check if there is already a piece there first (called by gameloop in the beginning of the game)
         public bool Place(Position position, PieceView piece)
         {
             if (piece == null)
@@ -100,6 +103,7 @@ namespace BoardSystem
             return true;
         }
 
+        //move a piece from a certain position to another => check if there is a piece on the fromposition first
         public bool Move(Position fromPosition, Position toPosition)
         {
             if (!IsValid(toPosition))
@@ -125,6 +129,7 @@ namespace BoardSystem
             return true;
         }
 
+        //remove a piece from a certain position => check if there is a piece on the position first
         public bool Take(Position fromPosition)
         {
             if (!IsValid(fromPosition))
@@ -148,6 +153,9 @@ namespace BoardSystem
 
             return true;
         }
+
+
+        // these events are for the BoardView class => the boardview should know which pieces to remove
 
         public void OnPiecePlaced(PiecePlacedEventArgs eventArgs)
         {

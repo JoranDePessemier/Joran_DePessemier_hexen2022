@@ -47,20 +47,22 @@ namespace GameSystem.Views
         private GameObject _tilePrefab;
 
         [SerializeField]
+        [Tooltip("Size of each tile, determines the space in between the tile world position")]
         private int _size;
+        public int Size => _size;
 
         private List<Position> _activePositions = new List<Position>();
         
+        //tiles on the boardon the board
         private Dictionary<Position, PositionView> _positionViews = new Dictionary<Position, PositionView>();
 
-        public int Size => _size;
-
+        //events for dragging and dropping cards over a tile
         public event EventHandler<PositionEventArgs> PositionDropped;
-
         public event EventHandler<PositionEventArgs> PositionDragged;
 
         private void OnEnable()
         {
+            //add the positionviews to the dictionary when the scene gets enabled
             PositionView[] positionViews = GetComponentsInChildren<PositionView>();
             foreach (PositionView positionView in positionViews)
             {
@@ -72,6 +74,7 @@ namespace GameSystem.Views
         {
             set
             {
+                //first deactivate all positions
                 foreach (Position position in _activePositions)
                 {
                     _positionViews[position].DeActivate();
@@ -86,6 +89,7 @@ namespace GameSystem.Views
                     _activePositions = value;
                 }
 
+                //activate all positions that are supposed to be active
                 foreach (Position position in value)
                 {
                     _positionViews[position].Activate();

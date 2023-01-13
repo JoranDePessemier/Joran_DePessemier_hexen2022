@@ -34,6 +34,7 @@ namespace HandFactory
 
         private void Start()
         {
+            //for the producttypes given in engine, put the right cards in the pile
             foreach(CardProductType type in _productTypes)
             {
                 for (int i = 0; i < type.Amount; i++)
@@ -49,12 +50,14 @@ namespace HandFactory
                 }
             }
 
+            //place the cards in the hands from the pile according to how big the hand should be (set up in engine)
             for (int i = 0; i < _handSize; i++)
             {
                 PutCardInHand();
             }
         }
 
+        //place a card from the pile in the hand => only works if the pile is not empty
         private void PutCardInHand()
         {
             if(_pile.Count > 0)
@@ -65,11 +68,13 @@ namespace HandFactory
             }
         }
 
+        //if a card is being dragged or dropped
         public void ChildStateSwitched(CardView cardView)
         {
             OnStateSwitched(new CardEventArgs(cardView));
         }
 
+        //remove a card entirely from the hand and pile => automatically places a new card in the hand
         public void RemoveCard(CardView cardView)
         {
             Destroy(cardView.gameObject);

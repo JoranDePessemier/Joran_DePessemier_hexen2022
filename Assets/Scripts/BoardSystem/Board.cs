@@ -70,7 +70,6 @@ namespace BoardSystem
         }
 
         //spawn in a piece on a certain position, check if there is already a piece there first (called by gameloop in the beginning of the game)
-        //branchtest
         public bool Place(Position position, PieceView piece)
         {
             if (piece == null)

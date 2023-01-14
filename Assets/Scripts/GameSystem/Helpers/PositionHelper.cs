@@ -153,7 +153,7 @@ namespace GameSystem.Helpers
 
         #region Circle selecting
 
-        public static List<Position> cubeRing(Board board,Position centerPosition, int radius)
+        public static List<Position> cubeRing(Board board,Position centerPosition, int radius, bool includeInvalid = false)
         {
             List<Position> results = new List<Position>();
 
@@ -163,7 +163,7 @@ namespace GameSystem.Helpers
             {
                 for (int j = 0; j < radius; j++)
                 {
-                    if (board.IsValid(hex))
+                    if (board.IsValid(hex) || includeInvalid)
                     {
                         results.Add(hex);
                     }

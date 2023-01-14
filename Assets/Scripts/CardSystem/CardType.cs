@@ -11,6 +11,7 @@ namespace CardSystem
         Teleport,
         LineAttack,
         PushEnemies,
-        AdjacentAttack
+        AdjacentAttack,
+        CircleRotate
     }
 }

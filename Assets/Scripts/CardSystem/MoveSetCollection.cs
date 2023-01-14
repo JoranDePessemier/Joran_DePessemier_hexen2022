@@ -17,6 +17,7 @@ namespace CardSystem
             _moveSets.Add(CardType.Teleport, new TeleportMoveSet(board));
             _moveSets.Add(CardType.AdjacentAttack, new AdjacentAttackMoveSet(board));
             _moveSets.Add(CardType.PushEnemies, new PushEnemiesMoveSet(board));
+            _moveSets.Add(CardType.LineAttackCircle, new LineAttackCircleMoveSet(board));
         }
 
         //other classes can ask the moveset for a specific cardttype

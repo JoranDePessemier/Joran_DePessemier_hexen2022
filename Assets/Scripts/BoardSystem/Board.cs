@@ -147,6 +147,11 @@ namespace BoardSystem
                 return false;
             }
 
+            if(piece.Type == PieceType.Player)
+            {
+                return false;
+            }
+
             _pieces.Remove(fromPosition);
 
             OnPieceTaken(new PieceTakenEventArgs(piece, fromPosition));

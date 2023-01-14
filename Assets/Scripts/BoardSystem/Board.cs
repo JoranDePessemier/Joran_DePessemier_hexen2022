@@ -121,6 +121,8 @@ namespace BoardSystem
                 return false;
             }
 
+
+
             _pieces.Remove(fromPosition);
             _pieces[toPosition] = piece;
 
@@ -143,6 +145,11 @@ namespace BoardSystem
             }
 
             if (!_pieces.TryGetValue(fromPosition, out PieceView piece))
+            {
+                return false;
+            }
+
+            if (piece.Type == PieceType.Player)
             {
                 return false;
             }

@@ -1,10 +1,10 @@
 using BoardSystem;
 using CardSystem;
-using CardSystem.MoveSets;
+using GameSystem.GameStates;
 using GameSystem.Helpers;
 using GameSystem.Views;
 using HandFactory;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace GameSystem
@@ -14,20 +14,20 @@ namespace GameSystem
         private Board _board;
         private Engine _engine;
         private BoardView _boardView;
-        private PieceView _player;
-        private HandView _handView;
+        private StateMachine _stateMachine;
+
+        private int _currentPlayerNumber;
+        private int _maxPlayerCount;
 
 
         private void Start()
         {
+            _stateMachine = new StateMachine();
+
             //setup the board view, board and card engine
             _boardView = FindObjectOfType<BoardView>();
             _board = new Board(_boardView.Size);
             _engine = new Engine(_board);
-
-            //setup the events for carddropping and dragging
-            _boardView.PositionDropped += OnPositionDropped;
-            _boardView.PositionDragged += OnPositionDragged;
 
             //makes sure the board class knows about each piece
             _board.PiecePlaced += (s, e) =>
@@ -47,58 +47,46 @@ namespace GameSystem
 
             //find all pieces and make sure the board class knows about them, also save the player
             PieceView[] pieceViews = FindObjectsOfType<PieceView>();
+            HandView[] handViews = FindObjectsOfType<HandView>();
+
+            int counter = 0;
+
             foreach (PieceView pieceView in pieceViews)
             {
+                
+
                 if(pieceView.Type == PieceType.Player)
                 {
-                    _player = pieceView;
+                    
+                    HandView hand = handViews[counter];
+
+                    PlayerState playerState = new PlayerState(pieceView, hand, _boardView, _engine);
+                    _stateMachine.Register($"Player{counter}", playerState);
+                    playerState.NextPlayer += OnNextPlayer;
+
+                    counter++;
+                    
                 }
 
                 _board.Place(PositionHelper.CubePosition(pieceView.WorldPosition), pieceView);
             }
 
-            //setup the hand view and method for when a card is dragged or dropped, even on empty space
-            _handView = FindObjectOfType<HandView>();
-            _handView.CardStateSwitched += (s, e) =>
-            {
-                _boardView.ActivePositions = new List<Position>();
-            };
+            _maxPlayerCount = counter;
+
+            _stateMachine.InitialState = "Player0";
+
         }
 
-        //called only when the card drops on a tile
-        private void OnPositionDropped(object sender, PositionEventArgs e)
+        private void OnNextPlayer(object sender, EventArgs e)
         {
-            Position dropPosition = e.Position;
-            CardView dropCard = e.CardView;
-
-            //from position is the player position
-            Position fromPosition = PositionHelper.CubePosition(_player.WorldPosition);
-
-            //find the card moveset
-            MoveSet moveSet = _engine.MoveSets.For(dropCard.Type);
+            _currentPlayerNumber++;
             
-            //only remove the card if the dropPosition is actually valid
-            if (moveSet.Positions(fromPosition, dropPosition).Contains(dropPosition))
+            if (_currentPlayerNumber >= _maxPlayerCount)
             {
-                _handView.RemoveCard(e.CardView);
+                _currentPlayerNumber = 0;
             }
 
-            //execute the card move for this card
-            _engine.Move(fromPosition, dropPosition, e.CardView);
-        }
-
-        //called every time a card is dragged on a tile
-        private void OnPositionDragged(object sender, PositionEventArgs e)
-        {
-            CardView dropCard = e.CardView;
-            Position fromPosition = PositionHelper.CubePosition(_player.WorldPosition);
-
-            //find the card moveset
-            MoveSet moveSet = _engine.MoveSets.For(dropCard.Type);
-
-            //find the valid positions and set the positions as active in the board, these active positions are removed again when the card is dropped
-            List<Position> validPositions = moveSet.Positions(fromPosition,e.Position);
-            _boardView.ActivePositions = validPositions;
+            _stateMachine.MoveTo($"Player{_currentPlayerNumber}");
         }
     }
 

@@ -16,12 +16,31 @@ namespace CardSystem.MoveSets
 
         public override bool Execute(Position fromPosition, Position toPosition)
         {
+            foreach (Position position in Positions(fromPosition,toPosition))
+            {
+                Board.Take(position);
+            }
+
             return true;
         }
 
         public override List<Position> Positions(Position fromPosition, Position hoverPosition)
         {
-            return new List<Position>(); 
+            List<Position> allPositions = PositionHelper.cubeCircle(Board, fromPosition, 3);
+
+            if (allPositions.Contains(hoverPosition))
+            {
+                List<Position> hoverPositions = PositionHelper.cubeLineDraw(fromPosition, hoverPosition);
+                hoverPositions.Remove(fromPosition);
+
+                return hoverPositions;
+            }
+            else
+            {
+                return allPositions;
+            }
+
+            
         }
     }
 }

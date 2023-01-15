@@ -182,7 +182,7 @@ namespace GameSystem.Helpers
         {
             List<Position> result = new List<Position>();
 
-            for (int i = 0; i < radius; i++)
+            for (int i = 0; i < radius+1; i++)
             {
                 result.AddRange(cubeRing(board, centerPosition, i));
             }
@@ -199,9 +199,9 @@ namespace GameSystem.Helpers
             return a + (b - a) * t;
         }
 
-        private static Position CubeLerp(Position a, Position b, float t)
+        private static Vector2 CubeLerp(Position a, Position b, float t)
         {
-            return new Position((int)Lerp(a.Q, b.Q, t), (int)Lerp(a.R, b.R, t));
+            return new Vector2(Lerp(a.Q, b.Q, t), Lerp(a.R, b.R, t));
         }
 
 
@@ -211,9 +211,11 @@ namespace GameSystem.Helpers
 
             List<Position> result = new List<Position>();
 
-            for (int i = 0; i < distance; i++)
+            for (int i = 0; i <= distance; i++)
             {
-                result.Add(CubeRound(CubeLerp(fromPosition, toPosition, 1f / distance * i)));
+                Vector2 cubeLerp = CubeLerp(fromPosition, toPosition, 1f / distance * i);
+
+                result.Add(CubeRound(cubeLerp.x,cubeLerp.y));
             }
 
             return result;

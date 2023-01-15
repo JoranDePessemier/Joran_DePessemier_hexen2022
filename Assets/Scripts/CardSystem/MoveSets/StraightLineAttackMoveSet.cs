@@ -1,4 +1,5 @@
 ﻿using BoardSystem;
+using GameSystem.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,12 @@ namespace CardSystem.MoveSets
 
         public override bool Execute(Position fromPosition, Position toPosition)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public override List<Position> Positions(Position fromPosition, Position hoverPosition)
         {
-            throw new NotImplementedException();
+            return new List<Position>(); 
         }
     }
 }

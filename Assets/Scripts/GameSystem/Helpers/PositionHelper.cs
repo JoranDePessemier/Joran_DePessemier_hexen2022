@@ -151,7 +151,7 @@ namespace GameSystem.Helpers
             => CubeLine(board, startingPosition, _directionVectors[1], maxSteps);
         #endregion
 
-        #region Circle selecting
+        #region Ring selecting
 
         public static List<Position> cubeRing(Board board,Position centerPosition, int radius)
         {
@@ -172,6 +172,51 @@ namespace GameSystem.Helpers
             }
 
             return results;
+        }
+
+        #endregion
+
+        #region Circle selecting
+
+        public static List<Position> cubeCircle(Board board, Position centerPosition, int radius)
+        {
+            List<Position> result = new List<Position>();
+
+            for (int i = 0; i < radius; i++)
+            {
+                result.AddRange(cubeRing(board, centerPosition, i));
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region Straight Line Selecting
+
+        private static float Lerp(float a, float b, float t)
+        {
+            return a + (b - a) * t;
+        }
+
+        private static Position CubeLerp(Position a, Position b, float t)
+        {
+            return new Position((int)Lerp(a.Q, b.Q, t), (int)Lerp(a.R, b.R, t));
+        }
+
+
+        public static List<Position> cubeLineDraw(Position fromPosition, Position toPosition)
+        {
+            int distance = CubeDistance(fromPosition, toPosition);
+
+            List<Position> result = new List<Position>();
+
+            for (int i = 0; i < distance; i++)
+            {
+                result.Add(CubeRound(CubeLerp(fromPosition, toPosition, 1f / distance * i)));
+            }
+
+            return result;
         }
 
         #endregion

@@ -39,6 +39,8 @@ namespace GameSystem.GameStates
 
         public void Push(string stateName)
         {
+            CurrentState.OnSuspend();
+
             _currentStateNames.Push(stateName);
 
             CurrentState.OnEnter();

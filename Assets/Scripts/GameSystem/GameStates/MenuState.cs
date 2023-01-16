@@ -25,7 +25,7 @@ namespace GameSystem.GameStates
 
         private void OnPlayClicked(object sender, EventArgs e)
         {
-            StateMachine.MoveTo(States.Playing);
+            StateMachine.Pop();
         }
 
         public override void OnExit()

@@ -22,7 +22,7 @@ namespace GameSystem
             _stateMachine.Register(States.Menu, new MenuState());
             _stateMachine.Register(States.Playing, new PlayingState());
 
-            _stateMachine.InitialState = States.Menu;
+            _stateMachine.InitialState = States.Playing;
         }
 
     }

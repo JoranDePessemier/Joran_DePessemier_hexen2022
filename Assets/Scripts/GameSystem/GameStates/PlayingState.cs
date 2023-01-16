@@ -27,6 +27,19 @@ namespace GameSystem.GameStates
 
             AsyncOperation op = SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
             op.completed += InitializeScene;
+            
+        }
+
+        public override void OnSuspend()
+        {
+            base.OnSuspend();
+            _handView.gameObject.SetActive(false);
+        }
+
+        public override void OnResume()
+        {
+            base.OnResume();
+            _handView.gameObject.SetActive(true);
         }
 
         private void InitializeScene(AsyncOperation obj)
@@ -74,6 +87,10 @@ namespace GameSystem.GameStates
             {
                 _boardView.ActivePositions = new List<Position>();
             };
+
+
+            //move to the menu immedeately after loading the scene
+            StateMachine.Push("Menu");
         }
 
             //called only when the card drops on a tile

@@ -624,6 +624,9 @@ MonoBehaviour:
   - _cardPrefab: {fileID: 4954017341638209181, guid: 9ce17bc0ab544af4a94769c17145d673,
       type: 3}
     _amount: 3
+  - _cardPrefab: {fileID: 3318910840990399674, guid: 9eb63be41e414a3409fec181d10c0ff0,
+      type: 3}
+    _amount: 3
   _handSize: 5
   _dragCanvas: {fileID: 1726465437}
 --- !u!1 &89462828

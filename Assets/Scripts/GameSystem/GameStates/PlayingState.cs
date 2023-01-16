@@ -33,12 +33,22 @@ namespace GameSystem.GameStates
         public override void OnSuspend()
         {
             base.OnSuspend();
+
+            //remove the events for carddropping and dragging (even if the handview is there, the card couldn't be dropped)
+            _boardView.PositionDropped -= OnPositionDropped;
+            _boardView.PositionDragged -= OnPositionDragged;
+
             _handView.gameObject.SetActive(false);
         }
 
         public override void OnResume()
         {
             base.OnResume();
+
+            //setup the events for carddropping and dragging
+            _boardView.PositionDropped += OnPositionDropped;
+            _boardView.PositionDragged += OnPositionDragged;
+
             _handView.gameObject.SetActive(true);
         }
 
@@ -49,9 +59,7 @@ namespace GameSystem.GameStates
             _board = new Board(_boardView.Size);
             _engine = new Engine(_board);
 
-            //setup the events for carddropping and dragging
-            _boardView.PositionDropped += OnPositionDropped;
-            _boardView.PositionDragged += OnPositionDragged;
+
 
             //makes sure the board class knows about each piece
             _board.PiecePlaced += (s, e) =>

@@ -32,6 +32,7 @@ namespace GameSystem.GameStates
         {
             base.OnExit();
 
+            //even if the scene was still loaded, button could not be clicked
             if(_menuView != null)
             {
                 _menuView.PlayClicked -= OnPlayClicked;
